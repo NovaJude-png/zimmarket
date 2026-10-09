@@ -134,8 +134,11 @@ export default function SellPage() {
                 <select className="input-field" value={form.condition} onChange={e => setForm({...form, condition: e.target.value})}>
                   <option value="NEW">New</option>
                   <option value="LIKE_NEW">Like New</option>
-                  <option value="GOOD">Good</option>
-                  <option value="FAIR">Fair</option>
+                  <option value="USED_EXCELLENT">Used - Excellent</option>
+                  <option value="USED_GOOD">Used - Good</option>
+                  <option value="USED_FAIR">Used - Fair</option>
+                  <option value="FOR_PARTS">For Parts</option>
+                  <option value="REFURBISHED">Refurbished</option>
                 </select>
               </div>
             </div>
@@ -167,6 +170,22 @@ export default function SellPage() {
                 <input type="checkbox" className="w-4 h-4 rounded" checked={form.allowSwap} onChange={e => setForm({...form, allowSwap: e.target.checked})} />
                 <span className="text-sm text-[#050505]">Allow Swap</span>
               </label>
+            </div>
+            {/* Quality Score */}
+            <div className="bg-[#F0F2F5] rounded-lg p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-[#050505]">Listing Quality</span>
+                <span className="text-sm font-bold" style={{ color: 'var(--blue)' }}>
+                  {Math.min(100, (form.title.length > 5 ? 20 : 0) + (form.description.length > 20 ? 25 : form.description.length > 10 ? 15 : 0) + (form.price ? 15 : 0) + (form.categoryId ? 15 : 0) + (images.length > 0 ? 25 : 0))}%
+                </span>
+              </div>
+              <div className="w-full h-2 bg-[#E4E6EB] rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-300" style={{
+                  width: `${Math.min(100, (form.title.length > 5 ? 20 : 0) + (form.description.length > 20 ? 25 : form.description.length > 10 ? 15 : 0) + (form.price ? 15 : 0) + (form.categoryId ? 15 : 0) + (images.length > 0 ? 25 : 0))}%`,
+                  background: 'var(--blue)',
+                }} />
+              </div>
+              <p className="text-xs text-[#65676B] mt-1">Add photos, detailed description, and accurate pricing for a higher score.</p>
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? 'Publishing...' : 'Publish Listing'}</button>
           </form>

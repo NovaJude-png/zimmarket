@@ -57,6 +57,8 @@ model User {
   adCampaigns       AdCampaign[]
   buyerOrders       Order[]         @relation("BuyerOrders")
   sellerOrders      Order[]         @relation("SellerOrders")
+  disputesFiled     Dispute[]       @relation("DisputeReporter")
+  disputesAgainst   Dispute[]       @relation("DisputeRespondent")
   aiRequests        AIRequest[]
   blockedUsers      BlockedUser[]   @relation("Blocker")
   blockedBy         BlockedUser[]   @relation("Blocked")
@@ -148,14 +150,35 @@ model Category {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  parent      Category?   @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    Category[]  @relation("CategoryHierarchy")
+  parent      Category?       @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[]      @relation("CategoryHierarchy")
+  subcategories Subcategory[]
   listings    Listing[]
 
   @@index([slug])
   @@index([parentId])
   @@index([sortOrder])
   @@index([isActive])
+}
+
+model Subcategory {
+  id          String   @id @default(uuid())
+  categoryId  String
+  name        String
+  slug        String   @unique
+  description String?
+  icon        String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    Category @relation(fields: [categoryId], references: [id])
+  listings    Listing[]
+
+  @@unique([categoryId, slug])
+  @@index([categoryId])
+  @@index([sortOrder])
 }
 
 // =============================================
@@ -166,6 +189,7 @@ model Listing {
   id                String   @id @default(uuid())
   sellerId          String
   categoryId        String
+  subcategoryId     String?
   title             String
   slug              String
   description       String
@@ -205,6 +229,7 @@ model Listing {
 
   seller            User           @relation(fields: [sellerId], references: [id])
   category          Category       @relation(fields: [categoryId], references: [id])
+  subcategory       Subcategory?   @relation(fields: [subcategoryId], references: [id])
   images            ListingImage[]
   videos            ListingVideo[]
   favourites        Favourite[]
@@ -284,6 +309,7 @@ model Message {
   senderId       String
   content        String
   messageType    String       @default("TEXT") // TEXT, IMAGE, OFFER, SYSTEM
+  mediaUrl       String?
   isRead         Boolean      @default(false)
   readAt         DateTime?
   createdAt      DateTime     @default(now())
@@ -438,6 +464,34 @@ model Order {
   @@index([buyerId])
   @@index([sellerId])
   @@index([listingId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// =============================================
+// DISPUTES
+// =============================================
+
+model Dispute {
+  id          String   @id @default(uuid())
+  orderId     String?
+  reporterId  String
+  respondentId String
+  reason      String   // NOT_RECEIVED, WRONG_ITEM, DAMAGED, NOT_AS_DESCRIBED, REFUND_REQUEST, OTHER
+  description String?
+  evidence    String?  // JSON array of image URLs
+  status      String   @default("OPEN") // OPEN, UNDER_REVIEW, RESOLVED, ESCALATED, CLOSED
+  resolution  String?
+  resolvedBy  String?
+  resolvedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User     @relation("DisputeReporter", fields: [reporterId], references: [id])
+  respondent  User     @relation("DisputeRespondent", fields: [respondentId], references: [id])
+
+  @@index([reporterId])
+  @@index([respondentId])
   @@index([status])
   @@index([createdAt])
 }

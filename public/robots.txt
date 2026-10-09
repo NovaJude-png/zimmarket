@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /messages/
+Disallow: /notifications/
+Disallow: /settings/
+Disallow: /profile
+Disallow: /orders/
+Disallow: /saved/
+Disallow: /seller/dashboard
+Disallow: /ads/dashboard
+
+Sitemap: https://zimmarket.co.zw/sitemap.xml

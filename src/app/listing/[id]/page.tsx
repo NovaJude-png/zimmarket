@@ -66,12 +66,35 @@ export default function ListingDetailPage() {
   if (loading) return <div className="min-h-screen"><Header /><div className="container-app py-6"><div className="skeleton h-96 rounded-xl" /></div></div>;
   if (!listing) return <div className="min-h-screen"><Header /><div className="container-app py-16 text-center"><p className="text-[#65676B]">Listing not found.</p></div></div>;
 
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: listing.title,
+    description: (listing.description as string)?.slice(0, 200),
+    image: (listing.images as Record<string, unknown>[])?.[0]?.url || undefined,
+    offers: {
+      '@type': 'Offer',
+      price: listing.price,
+      priceCurrency: listing.currency || 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+    seller: {
+      '@type': 'Organization',
+      name: sellerProfile?.displayName || 'ZimMarket Seller',
+    },
+    location: listing.locationCity ? {
+      '@type': 'Place',
+      address: { '@type': 'PostalAddress', addressLocality: listing.locationCity, addressCountry: 'ZW' },
+    } : undefined,
+  };
+
   const seller = listing.seller as Record<string, unknown>;
   const sellerProfile = seller?.profile as Record<string, unknown> | undefined;
   const isOwner = currentUser?.id === seller?.id;
 
   return (
     <div className="min-h-screen pb-20 md:pb-0">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <Header />
       <div className="container-app py-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

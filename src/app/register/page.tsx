@@ -57,8 +57,8 @@ export default function RegisterPage() {
             </select>
             <select className="input-field" value={formData.accountType} onChange={e => setFormData({...formData, accountType: e.target.value})}>
               <option value="BUYER">Buyer</option>
-              <option value="SELLER">Seller</option>
-              <option value="BOTH">Both</option>
+              <option value="INDIVIDUAL_SELLER">Individual Seller</option>
+              <option value="BUSINESS_SELLER">Business Seller</option>
             </select>
             <input className="input-field" type="password" placeholder="Password (min 8 characters)" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required minLength={8} />
             <input className="input-field" type="password" placeholder="Confirm password" value={formData.confirmPassword} onChange={e => setFormData({...formData, confirmPassword: e.target.value})} required />

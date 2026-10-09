@@ -29,7 +29,7 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#E4E6EB]" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <header className="sticky top-0 z-50 bg-white border-b border-[#E4E6EB]" style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} role="banner" aria-label="Main navigation">
       <div className="container-app flex items-center justify-between h-14">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">

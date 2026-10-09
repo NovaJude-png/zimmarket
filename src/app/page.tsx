@@ -53,7 +53,7 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white border-b border-[#E4E6EB]">
+      <section className="bg-white border-b border-[#E4E6EB]" aria-label="Welcome">
         <div className="container-app py-8 md:py-12">
           <div className="text-center max-w-2xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-[#050505] mb-3">
