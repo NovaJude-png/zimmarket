@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
@@ -7,6 +7,14 @@ import BottomNav from '@/components/layout/BottomNav';
 import { formatPrice, formatDate, CATEGORIES_ICONS } from '@/lib/utils';
 
 export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen"><Header /><div className="container-app py-4"><div className="listing-grid">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="card overflow-hidden"><div className="skeleton aspect-square" /></div>)}</div></div></div>}>
+      <ExploreContent />
+    </Suspense>
+  );
+}
+
+function ExploreContent() {
   const searchParams = useSearchParams();
   const [listings, setListings] = useState<Record<string, unknown>[]>([]);
   const [categories, setCategories] = useState<Record<string, unknown>[]>([]);
