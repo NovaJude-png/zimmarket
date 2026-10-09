@@ -73,9 +73,10 @@ async function sendViaSendGrid(options: EmailOptions): Promise<boolean> {
 }
 
 async function sendViaSMTP(options: EmailOptions): Promise<boolean> {
-  // Dynamic import to avoid bundling nodemailer when not needed
   try {
-    const nodemailer = await import('nodemailer');
+    // nodemailer is optional — install with: npm install nodemailer
+    // Using eval to prevent webpack from bundling it
+    const nodemailer = eval('require')('nodemailer');
     const transporter = nodemailer.createTransport({
       host: SMTP_HOST,
       port: parseInt(SMTP_PORT || '587'),
