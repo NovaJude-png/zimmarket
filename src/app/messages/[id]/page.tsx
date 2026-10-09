@@ -69,7 +69,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
       <div className="min-h-screen">
         <Header />
         <div className="flex items-center justify-center h-[60vh]">
-          <div className="animate-spin h-8 w-8 border-4 border-[#1B4D3E] border-t-transparent rounded-full" />
+          <div className="animate-spin h-8 w-8 border-4 border-[#0284C7] border-t-transparent rounded-full" />
         </div>
       </div>
     );
@@ -104,7 +104,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
           {otherProfile?.avatarUrl ? (
             <img src={otherProfile.avatarUrl as string} alt="" className="w-10 h-10 rounded-full object-cover" />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-[#1B4D3E] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-[#0284C7] flex items-center justify-center">
               <span className="text-white font-bold text-sm">
                 {((otherProfile?.displayName as string) || '?')[0].toUpperCase()}
               </span>
@@ -130,7 +130,7 @@ export default function ConversationPage({ params }: { params: Promise<{ id: str
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">{listing.title as string}</p>
             {(listing.price as number) > 0 && (
-              <p className="text-sm text-[#1B4D3E] font-bold">${(listing.price as number).toLocaleString()}</p>
+              <p className="text-sm text-[#0284C7] font-bold">${(listing.price as number).toLocaleString()}</p>
             )}
           </div>
           <span className={`badge text-xs ${(listing.status as string) === 'ACTIVE' ? 'badge-success' : 'badge-warning'}`}>

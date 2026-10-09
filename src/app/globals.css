@@ -3,31 +3,29 @@
 @tailwind utilities;
 
 :root {
-  /* ZimMarket Brand Colors - Original African-inspired palette */
-  --color-primary: #1B4D3E;      /* Deep forest green */
-  --color-primary-light: #2D7A5F; /* Medium green */
-  --color-primary-lighter: #4CAF85; /* Light green */
-  --color-accent: #D4A843;       /* Gold accent */
-  --color-accent-light: #E8C96A;
-  --color-bg: #FAFAF8;           /* Warm white */
+  /* Nova Tech / ZimMarket Brand — Light Blue & Black */
+  --color-primary: #0284C7;
+  --color-primary-light: #0EA5E9;
+  --color-primary-lighter: #38BDF8;
+  --color-primary-pale: #E0F2FE;
+  --color-dark: #0F172A;
+  --color-dark-soft: #1E293B;
+  --color-accent: #06B6D4;
+  --color-accent-light: #22D3EE;
+  --color-bg: #F8FAFC;
   --color-surface: #FFFFFF;
-  --color-text: #1A1A2E;         /* Deep navy-black */
-  --color-text-secondary: #6B7280;
-  --color-border: #E5E7EB;
-  --color-success: #059669;
-  --color-warning: #D97706;
-  --color-error: #DC2626;
-  --color-info: #2563EB;
+  --color-text: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-border: #E2E8F0;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -35,32 +33,15 @@ body {
   color: var(--color-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
-/* Focus styles for accessibility */
-:focus-visible {
-  outline: 2px solid var(--color-primary-light);
-  outline-offset: 2px;
-}
+:focus-visible { outline: 2px solid var(--color-primary-light); outline-offset: 2px; }
 
-/* Skeleton loading animation */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -73,44 +54,46 @@ body {
   border-radius: 4px;
 }
 
-/* ZimMarket component styles */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.3s ease-out; }
+
 @layer components {
   .btn-primary {
-    @apply bg-[#1B4D3E] text-white px-6 py-3 rounded-xl font-semibold
-           hover:bg-[#2D7A5F] active:bg-[#153D30] transition-all duration-200
+    @apply bg-[#0284C7] text-white px-6 py-3 rounded-xl font-semibold
+           hover:bg-[#0369A1] active:bg-[#075985] transition-all duration-200
            disabled:opacity-50 disabled:cursor-not-allowed
-           focus:outline-none focus:ring-2 focus:ring-[#2D7A5F] focus:ring-offset-2;
+           focus:outline-none focus:ring-2 focus:ring-[#0EA5E9] focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply bg-white text-[#1B4D3E] border-2 border-[#1B4D3E] px-6 py-3 rounded-xl font-semibold
-           hover:bg-[#1B4D3E] hover:text-white transition-all duration-200
-           disabled:opacity-50 disabled:cursor-not-allowed
-           focus:outline-none focus:ring-2 focus:ring-[#2D7A5F] focus:ring-offset-2;
+    @apply bg-white text-[#0284C7] border-2 border-[#0284C7] px-6 py-3 rounded-xl font-semibold
+           hover:bg-[#0284C7] hover:text-white transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {
-    @apply text-[#1B4D3E] px-4 py-2 rounded-lg font-medium
-           hover:bg-[#1B4D3E]/10 transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-[#2D7A5F] focus:ring-offset-2;
+    @apply text-[#0284C7] px-4 py-2 rounded-lg font-medium
+           hover:bg-[#0284C7]/10 transition-all duration-200;
   }
 
   .btn-accent {
-    @apply bg-[#D4A843] text-white px-6 py-3 rounded-xl font-semibold
-           hover:bg-[#C49A33] active:bg-[#B48C23] transition-all duration-200
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-[#0F172A] text-white px-6 py-3 rounded-xl font-semibold
+           hover:bg-[#1E293B] transition-all duration-200;
   }
 
   .btn-danger {
     @apply bg-red-600 text-white px-6 py-3 rounded-xl font-semibold
-           hover:bg-red-700 transition-all duration-200
-           disabled:opacity-50 disabled:cursor-not-allowed;
+           hover:bg-red-700 transition-all duration-200;
   }
 
   .input-field {
     @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white
            text-gray-900 placeholder-gray-400
-           focus:border-[#2D7A5F] focus:ring-2 focus:ring-[#2D7A5F]/20 focus:outline-none
+           focus:border-[#0EA5E9] focus:ring-2 focus:ring-[#0EA5E9]/20 focus:outline-none
            transition-all duration-200;
   }
 
@@ -124,154 +107,49 @@ body {
            hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
   }
 
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
+  .badge { @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium; }
+  .badge-success { @apply bg-emerald-100 text-emerald-800; }
+  .badge-warning { @apply bg-amber-100 text-amber-800; }
+  .badge-error { @apply bg-red-100 text-red-800; }
+  .badge-info { @apply bg-sky-100 text-sky-800; }
 
-  .badge-success {
-    @apply bg-green-100 text-green-800;
-  }
-
-  .badge-warning {
-    @apply bg-yellow-100 text-yellow-800;
-  }
-
-  .badge-error {
-    @apply bg-red-100 text-red-800;
-  }
-
-  .badge-info {
-    @apply bg-blue-100 text-blue-800;
-  }
-
-  .container-app {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  .gradient-brand {
-    background: linear-gradient(135deg, #1B4D3E 0%, #2D7A5F 100%);
-  }
-
-  .gradient-gold {
-    background: linear-gradient(135deg, #D4A843 0%, #E8C96A 100%);
-  }
+  .container-app { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
 }
 
-/* Listing card grid */
+.gradient-brand { background: linear-gradient(135deg, #0284C7 0%, #0F172A 100%); }
+.gradient-dark { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); }
+.gradient-accent { background: linear-gradient(135deg, #06B6D4 0%, #0284C7 100%); }
+
 .listing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
 }
+@media (min-width: 640px) { .listing-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; } }
+@media (min-width: 1024px) { .listing-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; } }
 
-@media (min-width: 640px) {
-  .listing-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .listing-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-  }
-}
-
-/* Image gallery */
-.gallery-thumb {
-  @apply w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 transition-all;
-}
-
-.gallery-thumb.active {
-  @apply border-[#1B4D3E] ring-2 ring-[#1B4D3E]/30;
-}
-
-.gallery-thumb:not(.active) {
-  @apply border-transparent opacity-60 hover:opacity-100;
-}
-
-/* Category pill */
 .category-pill {
   @apply flex flex-col items-center gap-2 p-4 rounded-2xl bg-white
-         border border-gray-100 hover:border-[#2D7A5F]/30 hover:shadow-md
+         border border-gray-100 hover:border-[#0EA5E9]/30 hover:shadow-md
          transition-all duration-200 cursor-pointer text-center;
 }
 
-/* Message bubble */
-.msg-bubble {
-  @apply max-w-[75%] px-4 py-2.5 rounded-2xl text-sm;
-}
+.msg-bubble { @apply max-w-[75%] px-4 py-2.5 rounded-2xl text-sm; }
+.msg-bubble.sent { @apply bg-[#0284C7] text-white rounded-br-md ml-auto; }
+.msg-bubble.received { @apply bg-gray-100 text-gray-900 rounded-bl-md; }
 
-.msg-bubble.sent {
-  @apply bg-[#1B4D3E] text-white rounded-br-md ml-auto;
-}
-
-.msg-bubble.received {
-  @apply bg-gray-100 text-gray-900 rounded-bl-md;
-}
-
-/* Bottom navigation for mobile */
 .bottom-nav {
-  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50
-         safe-bottom;
-}
-
-.safe-bottom {
+  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Modal backdrop */
-.modal-backdrop {
-  @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4;
-}
+.modal-backdrop { @apply fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4; }
+.modal-content { @apply bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-xl; }
 
-.modal-content {
-  @apply bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-xl;
-}
-
-/* Toast notification */
-.toast {
-  @apply fixed top-4 right-4 z-[100] max-w-sm w-full;
-}
-
-/* Star rating */
-.star-rating {
-  @apply flex gap-0.5;
-}
-
-.star {
-  @apply text-gray-300 cursor-pointer transition-colors;
-}
-
-.star.filled {
-  @apply text-[#D4A843];
-}
-
-/* Tab navigation */
-.tab-nav {
-  @apply flex border-b border-gray-200 overflow-x-auto;
-}
-
+.tab-nav { @apply flex border-b border-gray-200 overflow-x-auto; }
 .tab-item {
   @apply px-4 py-3 text-sm font-medium text-gray-500 whitespace-nowrap
-         border-b-2 border-transparent hover:text-[#1B4D3E] hover:border-[#2D7A5F]/30
+         border-b-2 border-transparent hover:text-[#0284C7] hover:border-[#0EA5E9]/30
          transition-colors cursor-pointer;
 }
-
-.tab-item.active {
-  @apply text-[#1B4D3E] border-[#1B4D3E];
-}
-
-/* Mobile menu */
-.mobile-menu {
-  @apply fixed inset-0 z-50 bg-white transform transition-transform duration-300;
-}
-
-.mobile-menu.closed {
-  @apply translate-x-full;
-}
-
-.mobile-menu.open {
-  @apply translate-x-0;
-}
+.tab-item.active { @apply text-[#0284C7] border-[#0284C7]; }

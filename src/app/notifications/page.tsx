@@ -42,7 +42,7 @@ export default function NotificationsPage() {
             {notifications.map((n: Record<string, unknown>) => {
               const Wrapper = n.link ? Link : 'div';
               return (
-                <Wrapper key={n.id as string} href={n.link as string || '#'} className={`block card p-4 ${!n.isRead ? 'border-l-4 border-[#1B4D3E]' : ''}`}>
+                <Wrapper key={n.id as string} href={n.link as string || '#'} className={`block card p-4 ${!n.isRead ? 'border-l-4 border-[#0284C7]' : ''}`}>
                   <div className="flex items-start gap-3">
                     <span className="text-xl">{typeIcons[n.type as string] || '🔔'}</span>
                     <div className="flex-1">

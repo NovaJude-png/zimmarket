@@ -86,8 +86,8 @@ export default function SavedPage() {
                     </svg>
                   </div>
                   <div className="p-3">
-                    <p className="font-semibold text-sm truncate group-hover:text-[#1B4D3E]">{listing.title as string}</p>
-                    <p className="text-[#1B4D3E] font-bold">{formatPrice(listing.price as number, listing.currency as string)}</p>
+                    <p className="font-semibold text-sm truncate group-hover:text-[#0284C7]">{listing.title as string}</p>
+                    <p className="text-[#0284C7] font-bold">{formatPrice(listing.price as number, listing.currency as string)}</p>
                     <p className="text-xs text-gray-500 mt-1">{listing.locationCity as string || ''}</p>
                   </div>
                 </Link>

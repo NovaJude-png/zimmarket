@@ -138,17 +138,17 @@ export default function SellPage() {
         <div className="flex items-center gap-1 mb-8">
           {steps.map((s) => (
             <div key={s.num} className="flex items-center flex-1">
-              <div className={`flex items-center gap-2 ${step >= s.num ? 'text-[#1B4D3E]' : 'text-gray-400'}`}>
+              <div className={`flex items-center gap-2 ${step >= s.num ? 'text-[#0284C7]' : 'text-gray-400'}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                  step > s.num ? 'bg-[#1B4D3E] text-white' :
-                  step === s.num ? 'bg-[#1B4D3E] text-white' :
+                  step > s.num ? 'bg-[#0284C7] text-white' :
+                  step === s.num ? 'bg-[#0284C7] text-white' :
                   'bg-gray-200 text-gray-500'
                 }`}>
                   {step > s.num ? '✓' : s.num}
                 </div>
                 <span className="text-xs font-medium hidden sm:block">{s.label}</span>
               </div>
-              {s.num < steps.length && <div className={`flex-1 h-0.5 mx-1 ${step > s.num ? 'bg-[#1B4D3E]' : 'bg-gray-200'}`} />}
+              {s.num < steps.length && <div className={`flex-1 h-0.5 mx-1 ${step > s.num ? 'bg-[#0284C7]' : 'bg-gray-200'}`} />}
             </div>
           ))}
         </div>
@@ -178,13 +178,13 @@ export default function SellPage() {
                     ✕
                   </button>
                   {i === 0 && (
-                    <span className="absolute bottom-1 left-1 bg-[#1B4D3E] text-white text-[9px] px-1.5 py-0.5 rounded">Main</span>
+                    <span className="absolute bottom-1 left-1 bg-[#0284C7] text-white text-[9px] px-1.5 py-0.5 rounded">Main</span>
                   )}
                 </div>
               ))}
 
               {uploadedImages.length < 10 && (
-                <label className="aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#2D7A5F] transition-colors">
+                <label className="aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-[#0EA5E9] transition-colors">
                   {uploading ? (
                     <svg className="animate-spin h-8 w-8 text-gray-400" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
@@ -468,7 +468,7 @@ export default function SellPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold">{form.title || 'No title'}</h3>
-                  <p className="text-[#1B4D3E] font-bold text-lg">
+                  <p className="text-[#0284C7] font-bold text-lg">
                     {CURRENCIES.find(c => c.code === form.currency)?.symbol || '$'}{parseFloat(form.price || '0').toLocaleString()}
                     {form.isNegotiable && <span className="text-xs text-gray-400 font-normal ml-1">(negotiable)</span>}
                   </p>

@@ -62,7 +62,7 @@ export default function ProfilePage() {
               {profile?.avatarUrl ? (
                 <img src={profile.avatarUrl as string} alt="" className="w-20 h-20 rounded-2xl border-4 border-white object-cover" />
               ) : (
-                <div className="w-20 h-20 rounded-2xl border-4 border-white bg-[#1B4D3E] flex items-center justify-center">
+                <div className="w-20 h-20 rounded-2xl border-4 border-white bg-[#0284C7] flex items-center justify-center">
                   <span className="text-white font-bold text-2xl">
                     {((profile?.displayName as string) || 'U')[0].toUpperCase()}
                   </span>
@@ -100,7 +100,7 @@ export default function ProfilePage() {
             {/* Stats */}
             <div className="grid grid-cols-4 gap-3 mt-4 pt-4 border-t border-gray-100">
               <div className="text-center">
-                <p className="font-bold text-lg text-[#1B4D3E]">{stats?.activeListings || 0}</p>
+                <p className="font-bold text-lg text-[#0284C7]">{stats?.activeListings || 0}</p>
                 <p className="text-xs text-gray-500">Listings</p>
               </div>
               <div className="text-center">
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{listing.title as string}</p>
-                      <p className="text-[#1B4D3E] font-bold text-sm">${(listing.price as number).toLocaleString()}</p>
+                      <p className="text-[#0284C7] font-bold text-sm">${(listing.price as number).toLocaleString()}</p>
                     </div>
                     <span className={`badge text-xs ${
                       listing.status === 'ACTIVE' ? 'badge-success' :

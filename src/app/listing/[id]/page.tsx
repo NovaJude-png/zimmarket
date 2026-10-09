@@ -114,11 +114,11 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
       <div className="container-app py-4 md:py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <Link href="/" className="hover:text-[#1B4D3E]">Home</Link>
+          <Link href="/" className="hover:text-[#0284C7]">Home</Link>
           <span>/</span>
-          <Link href="/explore" className="hover:text-[#1B4D3E]">Explore</Link>
+          <Link href="/explore" className="hover:text-[#0284C7]">Explore</Link>
           <span>/</span>
-          <Link href={`/explore?categoryId=${category?.id}`} className="hover:text-[#1B4D3E]">{category?.name as string}</Link>
+          <Link href={`/explore?categoryId=${category?.id}`} className="hover:text-[#0284C7]">{category?.name as string}</Link>
           <span>/</span>
           <span className="text-gray-700 truncate">{listing.title as string}</span>
         </nav>
@@ -169,7 +169,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{listing.title as string}</h1>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-3xl font-extrabold text-[#1B4D3E]">
+                  <span className="text-3xl font-extrabold text-[#0284C7]">
                     {formatPrice(listing.price as number, listing.currency as string)}
                   </span>
                   {(listing.isNegotiable as boolean) && (
@@ -267,7 +267,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
                     {sellerProfile?.avatarUrl ? (
                       <img src={sellerProfile.avatarUrl as string} alt="" className="w-12 h-12 rounded-full object-cover" />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-[#1B4D3E] flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-[#0284C7] flex items-center justify-center">
                         <span className="text-white font-bold text-lg">
                           {((sellerProfile?.displayName as string) || '?')[0].toUpperCase()}
                         </span>
@@ -275,7 +275,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
                     )}
                   </Link>
                   <div className="flex-1 min-w-0">
-                    <Link href={`/seller/${seller?.id as string}`} className="font-semibold text-gray-900 hover:text-[#1B4D3E] flex items-center gap-1">
+                    <Link href={`/seller/${seller?.id as string}`} className="font-semibold text-gray-900 hover:text-[#0284C7] flex items-center gap-1">
                       {sellerProfile?.displayName as string}
                       <span className={`text-xs ${verification.color}`}>{verification.icon}</span>
                     </Link>
@@ -285,7 +285,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
 
                 <div className="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-gray-100">
                   <div className="text-center">
-                    <p className="font-bold text-[#1B4D3E]">{(seller?.averageRating as number) || '—'}</p>
+                    <p className="font-bold text-[#0284C7]">{(seller?.averageRating as number) || '—'}</p>
                     <p className="text-[10px] text-gray-500">Rating</p>
                   </div>
                   <div className="text-center">
@@ -302,7 +302,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
 
                 <Link
                   href={`/seller/${seller?.id as string}`}
-                  className="block text-center text-sm text-[#1B4D3E] font-medium mt-3 hover:underline"
+                  className="block text-center text-sm text-[#0284C7] font-medium mt-3 hover:underline"
                 >
                   View Seller Profile →
                 </Link>
@@ -342,7 +342,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
                   <div className="flex items-center gap-2 mb-2">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map(s => (
-                        <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#D4A843]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
+                        <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#0F172A]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
                       ))}
@@ -371,7 +371,7 @@ export default function ListingPage({ params }: { params: Promise<{ id: string }
                   </div>
                   <div className="p-3">
                     <p className="font-semibold text-sm truncate">{sim.title as string}</p>
-                    <p className="text-[#1B4D3E] font-bold">{formatPrice(sim.price as number, sim.currency as string)}</p>
+                    <p className="text-[#0284C7] font-bold">{formatPrice(sim.price as number, sim.currency as string)}</p>
                   </div>
                 </Link>
               ))}

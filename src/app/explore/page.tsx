@@ -141,7 +141,7 @@ function ExploreContent() {
                 value={query}
                 onChange={e => { setQuery(e.target.value); setAiMode(false); }}
                 placeholder='Try "Toyota under $5000 in Harare"...'
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[#2D7A5F] focus:ring-2 focus:ring-[#2D7A5F]/20 outline-none text-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-[#0EA5E9] focus:ring-2 focus:ring-[#0EA5E9]/20 outline-none text-sm"
               />
             </div>
             <button type="submit" className="btn-primary !px-6">Search</button>
@@ -163,7 +163,7 @@ function ExploreContent() {
         {aiMode && aiResponse && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <div className="flex items-start gap-2">
-              <div className="w-6 h-6 gradient-gold rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-6 h-6 gradient-dark rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                 <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -177,14 +177,14 @@ function ExploreContent() {
         <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium hover:border-[#2D7A5F] whitespace-nowrap"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium hover:border-[#0EA5E9] whitespace-nowrap"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             Filters
             {activeFilterCount > 0 && (
-              <span className="w-5 h-5 bg-[#1B4D3E] text-white text-xs rounded-full flex items-center justify-center">{activeFilterCount}</span>
+              <span className="w-5 h-5 bg-[#0284C7] text-white text-xs rounded-full flex items-center justify-center">{activeFilterCount}</span>
             )}
           </button>
 
@@ -196,7 +196,7 @@ function ExploreContent() {
                 onClick={() => setCategoryId(categoryId === cat.id ? '' : cat.id as string)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
                   categoryId === cat.id
-                    ? 'bg-[#1B4D3E] text-white'
+                    ? 'bg-[#0284C7] text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -294,7 +294,7 @@ function ExploreContent() {
               </div>
             </div>
             <div className="flex justify-end mt-3">
-              <button onClick={clearFilters} className="text-sm text-[#1B4D3E] hover:underline">Clear all filters</button>
+              <button onClick={clearFilters} className="text-sm text-[#0284C7] hover:underline">Clear all filters</button>
             </div>
           </div>
         )}
@@ -340,7 +340,7 @@ function ExploreContent() {
                       </div>
                     )}
                     {(listing.isPromoted as boolean) && (
-                      <span className="absolute top-2 left-2 bg-[#D4A843] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">PROMOTED</span>
+                      <span className="absolute top-2 left-2 bg-[#0F172A] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">PROMOTED</span>
                     )}
                     {(listing.condition as string) && (
                       <span className="absolute top-2 right-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
@@ -349,8 +349,8 @@ function ExploreContent() {
                     )}
                   </div>
                   <div className="p-3">
-                    <p className="font-semibold text-sm text-gray-900 truncate group-hover:text-[#1B4D3E]">{listing.title as string}</p>
-                    <p className="text-[#1B4D3E] font-bold text-base mt-1">
+                    <p className="font-semibold text-sm text-gray-900 truncate group-hover:text-[#0284C7]">{listing.title as string}</p>
+                    <p className="text-[#0284C7] font-bold text-base mt-1">
                       {formatPrice(listing.price as number, listing.currency as string)}
                       {(listing.isNegotiable as boolean) && <span className="text-xs text-gray-400 font-normal ml-1">neg.</span>}
                     </p>
@@ -400,7 +400,7 @@ function ExploreContent() {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-[#1B4D3E] border-t-transparent rounded-full" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-[#0284C7] border-t-transparent rounded-full" /></div>}>
       <ExploreContent />
     </Suspense>
   );

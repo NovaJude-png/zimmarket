@@ -134,7 +134,7 @@ export default function SellerDashboard() {
                     <div key={review.id as string} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map(s => (
-                          <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#D4A843]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
+                          <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#0F172A]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                           </svg>
                         ))}
@@ -159,7 +159,7 @@ export default function SellerDashboard() {
                 <button
                   key={s}
                   onClick={() => setListingFilter(s)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${listingFilter === s ? 'bg-[#1B4D3E] text-white' : 'bg-white text-gray-600 border'}`}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${listingFilter === s ? 'bg-[#0284C7] text-white' : 'bg-white text-gray-600 border'}`}
                 >
                   {s}
                 </button>
@@ -175,8 +175,8 @@ export default function SellerDashboard() {
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <Link href={`/listing/${listing.id}`} className="font-medium text-sm hover:text-[#1B4D3E] truncate block">{listing.title as string}</Link>
-                    <p className="text-[#1B4D3E] font-bold">{formatPrice(listing.price as number, listing.currency as string)}</p>
+                    <Link href={`/listing/${listing.id}`} className="font-medium text-sm hover:text-[#0284C7] truncate block">{listing.title as string}</Link>
+                    <p className="text-[#0284C7] font-bold">{formatPrice(listing.price as number, listing.currency as string)}</p>
                     <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
                       <span>👁️ {listing.viewCount as number || 0}</span>
                       <span>❤️ {listing.favouriteCount as number || 0}</span>
@@ -199,7 +199,7 @@ export default function SellerDashboard() {
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map(s => (
-                      <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#D4A843]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
+                      <svg key={s} className={`w-4 h-4 ${s <= (review.rating as number) ? 'text-[#0F172A]' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                       </svg>
                     ))}

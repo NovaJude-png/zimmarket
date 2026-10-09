@@ -103,8 +103,8 @@ export default function RegisterPage() {
 
         {/* Progress */}
         <div className="flex items-center gap-2 mb-6">
-          <div className={`flex-1 h-1 rounded-full ${step >= 1 ? 'bg-[#1B4D3E]' : 'bg-gray-200'}`} />
-          <div className={`flex-1 h-1 rounded-full ${step >= 2 ? 'bg-[#1B4D3E]' : 'bg-gray-200'}`} />
+          <div className={`flex-1 h-1 rounded-full ${step >= 1 ? 'bg-[#0284C7]' : 'bg-gray-200'}`} />
+          <div className={`flex-1 h-1 rounded-full ${step >= 2 ? 'bg-[#0284C7]' : 'bg-gray-200'}`} />
         </div>
 
         {/* Form */}
@@ -252,7 +252,7 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
               Already have an account?{' '}
-              <Link href="/login" className="text-[#1B4D3E] font-semibold hover:underline">
+              <Link href="/login" className="text-[#0284C7] font-semibold hover:underline">
                 Sign in
               </Link>
             </p>

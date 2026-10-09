@@ -27,7 +27,7 @@ export default function AdminSubscriptionsPage() {
           {plans.map((plan: Record<string, unknown>) => (
             <div key={plan.id as string} className="card p-6">
               <h3 className="text-lg font-bold">{plan.name as string}</h3>
-              <p className="text-3xl font-extrabold text-[#1B4D3E] mt-2">
+              <p className="text-3xl font-extrabold text-[#0284C7] mt-2">
                 ${(plan.price as number).toFixed(2)}<span className="text-sm font-normal text-gray-500">/{plan.duration as number}d</span>
               </p>
               <div className="mt-4 space-y-2 text-sm text-gray-600">

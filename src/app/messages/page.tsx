@@ -76,7 +76,7 @@ export default function MessagesPage() {
                   {profile?.avatarUrl ? (
                     <img src={profile.avatarUrl as string} alt="" className="w-12 h-12 rounded-full object-cover" />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-[#1B4D3E] flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-[#0284C7] flex items-center justify-center flex-shrink-0">
                       <span className="text-white font-bold">
                         {((profile?.displayName as string) || '?')[0].toUpperCase()}
                       </span>
@@ -88,7 +88,7 @@ export default function MessagesPage() {
                       <span className="text-xs text-gray-400 flex-shrink-0">{formatDate(conv.lastMsgAt as string)}</span>
                     </div>
                     {listing && (
-                      <p className="text-xs text-[#1B4D3E] truncate">Re: {listing.title as string}</p>
+                      <p className="text-xs text-[#0284C7] truncate">Re: {listing.title as string}</p>
                     )}
                     <p className="text-sm text-gray-500 truncate">{(conv.lastMessage as string) || 'No messages yet'}</p>
                   </div>
