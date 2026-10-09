@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import BottomNav from '@/components/layout/BottomNav';
-import { formatPrice, CATEGORIES_ICONS } from '@/lib/utils';
+import { formatPrice, formatDate, CATEGORIES_ICONS } from '@/lib/utils';
 
 interface Category {
   id: string;
@@ -24,6 +24,7 @@ interface Listing {
   viewCount: number;
   favouriteCount: number;
   isPromoted: boolean;
+  isNegotiable: boolean;
   createdAt: string;
   images: { url: string }[];
   seller: { profile: { displayName: string } | null };

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
-import { formatPrice, formatDate, getStatusColor } from '@/lib/utils';
+import { formatPrice, getStatusColor } from '@/lib/utils';
 
 export default function AdminListingsPage() {
   const router = useRouter();

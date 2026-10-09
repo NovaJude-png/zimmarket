@@ -37,24 +37,31 @@ export default function AdminVerificationPage() {
           {requests.map((req: Record<string, unknown>) => {
             const user = req.user as Record<string, unknown>;
             const profile = user?.profile as Record<string, unknown> | null;
+            const displayName = String(profile?.displayName || 'Unknown');
+            const currentLevel = Number(req.currentLevel || 0);
+            const requestedLevel = Number(req.requestedLevel || 0);
+            const businessName = req.businessName ? String(req.businessName) : null;
+            const documentType = req.documentType ? String(req.documentType) : null;
+            const status = String(req.status || 'PENDING');
+
             return (
               <div key={req.id as string} className="card p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{(profile?.displayName as string) || 'Unknown'}</p>
-                    <p className="text-xs text-gray-500">Level {req.currentLevel as number} → {req.requestedLevel as number}</p>
-                    {req.businessName && <p className="text-xs text-gray-500">Business: {req.businessName as string}</p>}
-                    {req.documentType && <p className="text-xs text-gray-500">Document: {req.documentType as string}</p>}
+                    <p className="font-medium">{displayName}</p>
+                    <p className="text-xs text-gray-500">Level {currentLevel} → {requestedLevel}</p>
+                    {businessName && <p className="text-xs text-gray-500">Business: {businessName}</p>}
+                    {documentType && <p className="text-xs text-gray-500">Document: {documentType}</p>}
                   </div>
                   <div className="flex gap-2">
-                    {req.status === 'PENDING' && (
+                    {status === 'PENDING' && (
                       <>
-                        <button onClick={() => handleAction(req.id as string, 'approve', req.requestedLevel as number)} className="btn-primary !py-1.5 !px-3 text-xs">Approve</button>
+                        <button onClick={() => handleAction(req.id as string, 'approve', requestedLevel)} className="btn-primary !py-1.5 !px-3 text-xs">Approve</button>
                         <button onClick={() => handleAction(req.id as string, 'reject', 0)} className="btn-danger !py-1.5 !px-3 text-xs">Reject</button>
                       </>
                     )}
-                    <span className={`badge text-xs ${req.status === 'APPROVED' ? 'badge-success' : req.status === 'REJECTED' ? 'badge-error' : 'badge-warning'}`}>
-                      {req.status as string}
+                    <span className={`badge text-xs ${status === 'APPROVED' ? 'badge-success' : status === 'REJECTED' ? 'badge-error' : 'badge-warning'}`}>
+                      {status}
                     </span>
                   </div>
                 </div>
