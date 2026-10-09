@@ -29,6 +29,7 @@ model User {
   accountType       String    @default("BUYER") // BUYER, INDIVIDUAL_SELLER, BUSINESS_SELLER, ADMIN
   isActive          Boolean   @default(true)
   isBanned          Boolean   @default(false)
+  isVerified        Boolean   @default(false)
   banReason         String?
   lastLoginAt       DateTime?
   createdAt         DateTime  @default(now())

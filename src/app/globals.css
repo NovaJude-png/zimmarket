@@ -373,4 +373,54 @@ textarea.input-field {
   .container-app {
     padding: 0 12px;
   }
+
+  .listing-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+
+  .card {
+    border-radius: var(--radius);
+  }
+
+  .card-hover {
+    border-radius: var(--radius);
+  }
+
+  .btn-primary, .btn-secondary, .btn-danger {
+    min-height: 44px;
+    font-size: 15px;
+  }
+
+  .input-field {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .category-pill {
+    padding: 12px 6px;
+    border-radius: var(--radius);
+  }
+
+  .message-sent, .message-received {
+    max-width: 85%;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .listing-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .container-app {
+    padding: 0 8px;
+  }
+}
+
+/* ── Safe areas for notched phones ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-20 {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
 }
