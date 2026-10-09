@@ -6,6 +6,7 @@ import { formatPrice } from '@/lib/utils';
 
 export default function SellerDashboardPage() {
   const [user, setUser] = useState<Record<string, unknown> | null>(null);
+  const [dashboard, setDashboard] = useState<Record<string, unknown> | null>(null);
   const [listings, setListings] = useState<Record<string, unknown>[]>([]);
   const [orders, setOrders] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,20 +15,23 @@ export default function SellerDashboardPage() {
     fetch('/api/auth/me').then(r => r.json()).then(async d => {
       if (!d.user) { window.location.href = '/login'; return; }
       setUser(d.user);
-      const [listRes, orderRes] = await Promise.all([
-        fetch(`/api/listings?sellerId=${d.user.id}&limit=10`),
-        fetch('/api/orders?asSeller=true'),
-      ]);
-      const listData = await listRes.json();
-      const orderData = await orderRes.json();
-      setListings(listData.listings || []);
-      setOrders(orderData.orders || []);
+      try {
+        const [dashRes, listRes, orderRes] = await Promise.all([
+          fetch('/api/seller/dashboard').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch(`/api/listings?sellerId=${d.user.id}&limit=10`).then(r => r.json()).catch(() => ({ listings: [] })),
+          fetch('/api/orders?asSeller=true').then(r => r.ok ? r.json() : { orders: [] }).catch(() => ({ orders: [] })),
+        ]);
+        setDashboard(dashRes);
+        setListings(listRes.listings || []);
+        setOrders(orderRes.orders || []);
+      } catch {}
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
+  const activeListings = dashboard?.stats?.activeListings ?? listings.filter(l => l.status === 'ACTIVE').length;
+  const totalViews = dashboard?.stats?.totalViews ?? listings.reduce((s, l) => s + (l.viewCount || 0), 0);
   const totalRevenue = orders.filter(o => o.status === 'COMPLETED').reduce((s, o) => s + (o.total || 0), 0);
-  const activeListings = listings.filter(l => l.status === 'ACTIVE').length;
 
   return (
     <div className="min-h-screen">
@@ -47,11 +51,11 @@ export default function SellerDashboardPage() {
             { label: 'Active Listings', value: activeListings, icon: '📦' },
             { label: 'Total Orders', value: orders.length, icon: '🧾' },
             { label: 'Revenue', value: formatPrice(totalRevenue, 'USD'), icon: '💰' },
-            { label: 'Views', value: listings.reduce((s, l) => s + (l.viewCount || 0), 0), icon: '👁️' },
+            { label: 'Total Views', value: totalViews, icon: '👁️' },
           ].map(s => (
             <div key={s.label} className="card p-3 text-center">
               <span className="text-xl">{s.icon}</span>
-              <p className="text-lg font-bold text-[#050505] mt-1">{s.value}</p>
+              <p className="text-lg font-bold text-[#050505] mt-1">{loading ? '...' : s.value}</p>
               <p className="text-xs text-[#65676B]">{s.label}</p>
             </div>
           ))}
@@ -76,7 +80,7 @@ export default function SellerDashboardPage() {
                 </Link>
               ))}
             </div>
-          ) : <p className="text-sm text-[#65676B]">No listings yet.</p>}
+          ) : <p className="text-sm text-[#65676B]">No listings yet. <Link href="/sell" className="font-semibold hover:underline" style={{ color: 'var(--blue)' }}>Create one</Link></p>}
         </div>
 
         {/* Recent Orders */}
@@ -90,7 +94,7 @@ export default function SellerDashboardPage() {
                   <span className="text-lg">🧾</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-[#050505] text-sm">Order #{(o.id as string).slice(0, 8)}</p>
-                    <p className="text-xs text-[#65676B]">${(o.total as number).toFixed(2)}</p>
+                    <p className="text-xs text-[#65676B]">{formatPrice(o.total as number, o.currency as string)} · {new Date(o.createdAt as string).toLocaleDateString()}</p>
                   </div>
                   <span className={`badge text-[10px] ${o.status === 'COMPLETED' ? 'badge-success' : o.status === 'DISPUTED' ? 'badge-error' : 'badge-warning'}`}>{o.status as string}</span>
                 </div>

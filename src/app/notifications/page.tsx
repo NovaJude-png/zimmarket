@@ -18,7 +18,11 @@ export default function NotificationsPage() {
   }, []);
 
   const markRead = async (id: string) => {
-    await fetch(`/api/notifications/${id}`, { method: 'PUT' });
+    await fetch('/api/notifications', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notificationId: id }),
+    });
     setNotifications(prev => prev.map(n => n.id === id ? {...n, isRead: true} : n));
   };
 

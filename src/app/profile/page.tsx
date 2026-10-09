@@ -39,8 +39,8 @@ export default function ProfilePage() {
               <h1 className="text-xl font-bold text-[#050505]">{(profile?.displayName as string) || (user.email as string)}</h1>
               <p className="text-sm text-[#65676B]">{user.email as string}</p>
               <div className="flex items-center gap-2 mt-1">
-                <span className="badge badge-info text-[10px]">{(user.accountType as string).toLowerCase()}</span>
-                {(user.isVerified as boolean) && <span className="badge badge-success text-[10px]">Verified</span>}
+                <span className="badge badge-info text-[10px]">{(user.accountType as string)?.toLowerCase()}</span>
+                {(user as Record<string, unknown>).isVerified && <span className="badge badge-success text-[10px]">✓ Verified</span>}
               </div>
             </div>
             <Link href="/settings" className="btn-secondary !py-1.5 !px-3 text-sm">
@@ -51,12 +51,14 @@ export default function ProfilePage() {
         </div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-4">
           {[
             { label: 'My Listings', count: listings.length, href: '/profile', icon: '📦' },
             { label: 'Orders', href: '/orders', icon: '🧾' },
             { label: 'Saved', href: '/saved', icon: '❤️' },
             { label: 'Settings', href: '/settings', icon: '⚙️' },
+            { label: 'Dashboard', href: '/seller/dashboard', icon: '📊' },
+            { label: 'Verify', href: '/verify', icon: '✓' },
           ].map(item => (
             <Link key={item.label} href={item.href} className="card p-3 text-center hover:shadow-md transition-shadow">
               <span className="text-xl">{item.icon}</span>

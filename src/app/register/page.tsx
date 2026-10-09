@@ -3,20 +3,28 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '', firstName: '', lastName: '', phone: '', city: 'Harare', accountType: 'BUYER' });
+  const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '', displayName: '', phone: '', locationCity: 'Harare', accountType: 'BUYER' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) { setError('Passwords do not match'); return; }
+    if (formData.password.length < 8) { setError('Password must be at least 8 characters'); return; }
     setLoading(true);
     setError('');
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          email: formData.email,
+          phone: formData.phone || undefined,
+          password: formData.password,
+          displayName: formData.displayName,
+          locationCity: formData.locationCity,
+          accountType: formData.accountType,
+        }),
       });
       const data = await res.json();
       if (res.ok) { window.location.href = data.redirect || '/'; }
@@ -41,13 +49,10 @@ export default function RegisterPage() {
         <div className="bg-white rounded-lg shadow-md p-4">
           {error && <div className="mb-3 p-3 bg-[#FDECEA] text-[#C62828] text-sm rounded-lg">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="grid grid-cols-2 gap-2">
-              <input className="input-field" placeholder="First name" value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} required />
-              <input className="input-field" placeholder="Last name" value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} required />
-            </div>
+            <input className="input-field" placeholder="Display name (shown to others)" value={formData.displayName} onChange={e => setFormData({...formData, displayName: e.target.value})} required minLength={2} />
             <input className="input-field" type="email" placeholder="Email address" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
-            <input className="input-field" type="tel" placeholder="Phone number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-            <select className="input-field" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})}>
+            <input className="input-field" type="tel" placeholder="Phone number (optional)" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+            <select className="input-field" value={formData.locationCity} onChange={e => setFormData({...formData, locationCity: e.target.value})}>
               {cities.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
             <select className="input-field" value={formData.accountType} onChange={e => setFormData({...formData, accountType: e.target.value})}>
@@ -55,9 +60,9 @@ export default function RegisterPage() {
               <option value="SELLER">Seller</option>
               <option value="BOTH">Both</option>
             </select>
-            <input className="input-field" type="password" placeholder="Password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required minLength={6} />
+            <input className="input-field" type="password" placeholder="Password (min 8 characters)" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required minLength={8} />
             <input className="input-field" type="password" placeholder="Confirm password" value={formData.confirmPassword} onChange={e => setFormData({...formData, confirmPassword: e.target.value})} required />
-            <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? 'Creating...' : 'Sign Up'}</button>
+            <button type="submit" disabled={loading} className="btn-primary w-full">{loading ? 'Creating account...' : 'Sign Up'}</button>
           </form>
           <div className="my-4 border-t border-[#E4E6EB]" />
           <div className="text-center">

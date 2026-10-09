@@ -5,7 +5,7 @@ import { hashPassword, createSession, setSessionCookie, generateVerifyToken } fr
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, phone, password, displayName, locationCity, locationProvince } = body;
+    const { email, phone, password, displayName, locationCity, locationProvince, accountType } = body;
 
     // Validation
     if (!password || password.length < 8) {
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         phone,
         passwordHash,
         emailVerifyToken,
-        accountType: 'BUYER',
+        accountType: accountType || 'BUYER',
         profile: {
           create: {
             displayName: displayName.trim(),

@@ -21,38 +21,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   try {
     switch (resource) {
-      case 'stats': {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const [
-          totalUsers, activeUsers, newUsersToday, totalListings,
-          activeListings, newListingsToday, soldListings, pendingReports,
-          totalRevenue, activeSubscriptions, totalMessages,
-        ] = await Promise.all([
-          prisma.user.count(),
-          prisma.user.count({ where: { lastLoginAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } }),
-          prisma.user.count({ where: { createdAt: { gte: today } } }),
-          prisma.listing.count(),
-          prisma.listing.count({ where: { status: 'ACTIVE' } }),
-          prisma.listing.count({ where: { createdAt: { gte: today } } }),
-          prisma.listing.count({ where: { status: 'SOLD' } }),
-          prisma.report.count({ where: { status: 'SUBMITTED' } }),
-          prisma.payment.aggregate({ where: { status: 'SUCCESSFUL' }, _sum: { amount: true } }),
-          prisma.subscription.count({ where: { status: 'ACTIVE' } }),
-          prisma.message.count(),
-        ]);
-
-        return NextResponse.json({
-          stats: {
-            totalUsers, activeUsers, newUsersToday, totalListings,
-            activeListings, newListingsToday, soldListings, pendingReports,
-            totalRevenue: totalRevenue._sum.amount || 0,
-            activeSubscriptions, totalMessages,
-          },
-        });
-      }
-
       case 'users': {
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '20');
@@ -227,6 +195,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
         if (body.action === 'setAccountType') {
           await prisma.user.update({ where: { id }, data: { accountType: body.accountType } });
+          return NextResponse.json({ success: true });
+        }
+
+        if (body.action === 'verify') {
+          await prisma.user.update({ where: { id }, data: { isVerified: true } });
+          await prisma.notification.create({
+            data: {
+              userId: id, type: 'VERIFICATION', title: 'Account Verified',
+              body: 'Your account has been verified by ZimMarket.',
+            },
+          });
           return NextResponse.json({ success: true });
         }
 

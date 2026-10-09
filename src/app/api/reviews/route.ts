@@ -2,6 +2,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { getSession } from '@/lib/auth';
 
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const targetId = searchParams.get('targetId');
+    if (!targetId) return NextResponse.json({ reviews: [] });
+
+    const reviews = await prisma.review.findMany({
+      where: { targetId },
+      include: {
+        author: { include: { profile: { select: { displayName: true, avatarUrl: true } } } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+    });
+
+    return NextResponse.json({ reviews });
+  } catch {
+    return NextResponse.json({ reviews: [] });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();

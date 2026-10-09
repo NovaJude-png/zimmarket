@@ -13,6 +13,10 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = { status: 'ACTIVE' };
 
     if (searchParams.get('categoryId')) where.categoryId = searchParams.get('categoryId');
+    if (searchParams.get('sellerId')) {
+      where.sellerId = searchParams.get('sellerId');
+      delete where.status; // Show all statuses for own listings
+    }
     if (searchParams.get('city')) where.locationCity = searchParams.get('city');
     if (searchParams.get('province')) where.locationProvince = searchParams.get('province');
     if (searchParams.get('condition')) where.condition = searchParams.get('condition');
