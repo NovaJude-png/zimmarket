@@ -1,107 +1,53 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import BottomNav from '@/components/layout/BottomNav';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, formatDate } from '@/lib/utils';
 
 export default function SavedPage() {
-  const [favourites, setFavourites] = useState<Record<string, unknown>[]>([]);
+  const [listings, setListings] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
-  const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
-    fetch('/api/auth/me').then(r => r.json()).then(data => {
-      if (data.user) {
-        setAuthed(true);
-        fetch('/api/favourites').then(r => r.json()).then(d => {
-          setFavourites(d.favourites || []);
-          setLoading(false);
-        });
-      } else {
+    fetch('/api/auth/me').then(r => r.json()).then(d => {
+      if (!d.user) { window.location.href = '/login'; return; }
+      fetch('/api/favourites').then(r => r.json()).then(fd => {
+        setListings(fd.favourites || fd.listings || []);
         setLoading(false);
-      }
+      });
     }).catch(() => setLoading(false));
   }, []);
-
-  const handleRemove = async (listingId: string) => {
-    try {
-      await fetch('/api/favourites', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId }),
-      });
-      setFavourites(prev => prev.filter((l: Record<string, unknown>) => l.id !== listingId));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  if (!authed && !loading) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <div className="container-app py-20 text-center">
-          <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-          <h2 className="text-xl font-bold mb-2">Sign in to view saved items</h2>
-          <p className="text-gray-500 mb-4">Save your favourite listings for later.</p>
-          <Link href="/login" className="btn-primary">Sign In</Link>
-        </div>
-        <BottomNav />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen pb-20 md:pb-0">
       <Header />
       <div className="container-app py-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Saved Items</h1>
-
+        <h1 className="text-xl font-bold text-[#050505] mb-4">Saved Items</h1>
         {loading ? (
+          <div className="listing-grid">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="card overflow-hidden"><div className="skeleton aspect-square" /><div className="p-3 space-y-2"><div className="skeleton h-4 w-3/4" /><div className="skeleton h-4 w-1/2" /></div></div>)}</div>
+        ) : listings.length > 0 ? (
           <div className="listing-grid">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="card"><div className="skeleton aspect-square rounded-t-2xl" /><div className="p-3 space-y-2"><div className="skeleton h-4 w-3/4" /><div className="skeleton h-5 w-1/2" /></div></div>
-            ))}
-          </div>
-        ) : favourites.length > 0 ? (
-          <div className="listing-grid">
-            {favourites.map((listing: Record<string, unknown>) => (
-              <div key={listing.id as string} className="card-hover overflow-hidden group relative">
-                <button
-                  onClick={() => handleRemove(listing.id as string)}
-                  className="absolute top-2 right-2 z-10 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center text-red-500 hover:bg-red-50"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
-                <Link href={`/listing/${listing.id}`}>
-                  <div className="aspect-square bg-gray-100 flex items-center justify-center">
-                    <svg className="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+            {listings.map((l: Record<string, unknown>) => (
+              <Link key={l.id as string} href={`/listing/${l.id as string}`} className="card-hover overflow-hidden group block">
+                <div className="relative aspect-square bg-[#F0F2F5]">
+                  <div className="w-full h-full bg-gradient-to-br from-[#F0F2F5] to-[#E4E6EB] flex items-center justify-center">
+                    <svg className="w-10 h-10 text-[#CED0D4]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
                   </div>
-                  <div className="p-3">
-                    <p className="font-semibold text-sm truncate group-hover:text-[#0284C7]">{listing.title as string}</p>
-                    <p className="text-[#0284C7] font-bold">{formatPrice(listing.price as number, listing.currency as string)}</p>
-                    <p className="text-xs text-gray-500 mt-1">{listing.locationCity as string || ''}</p>
-                  </div>
-                </Link>
-              </div>
+                </div>
+                <div className="p-3">
+                  <p className="font-bold text-[17px] text-[#050505]">{formatPrice(l.price as number, l.currency as string)}</p>
+                  <p className="text-[14px] text-[#050505] truncate group-hover:underline">{l.title as string}</p>
+                  <span className="text-[12px] text-[#65676B]">{l.locationCity as string || ''}</span>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-            <h3 className="text-lg font-semibold mb-2">No saved items</h3>
-            <p className="text-gray-500 mb-4">Tap the heart on any listing to save it here.</p>
-            <Link href="/explore" className="btn-primary">Explore Listings</Link>
+          <div className="card p-10 text-center">
+            <svg className="w-12 h-12 mx-auto text-[#CED0D4] mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg>
+            <p className="text-[#65676B] mb-3">No saved items yet.</p>
+            <Link href="/explore" className="btn-primary text-sm">Browse Listings</Link>
           </div>
         )}
       </div>

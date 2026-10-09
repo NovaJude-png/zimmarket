@@ -18,39 +18,36 @@ export default function AdminAnalyticsPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F]">
+    <div className="min-h-screen">
       <Header />
-      <div className="container-app py-6">
-        <h1 className="text-2xl font-bold text-[#E8E8ED] mb-6">Platform Analytics</h1>
-
+      <div className="container-app py-4">
+        <h1 className="text-xl font-bold text-[#050505] mb-4">Analytics</h1>
         {loading ? (
-          <div className="grid grid-cols-2 gap-3">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton h-28 rounded-2xl" />)}</div>
+          <div className="grid grid-cols-2 gap-3">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton h-24 rounded-lg" />)}</div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
-              { label: 'Total Users', value: stats.users || 0, icon: '👥', color: '#38BDF8' },
-              { label: 'Active Listings', value: stats.listings || 0, icon: '📦', color: '#34D399' },
-              { label: 'Total Orders', value: stats.orders || 0, icon: '🧾', color: '#A78BFA' },
-              { label: 'Open Reports', value: stats.reports || 0, icon: '🚩', color: '#F87171' },
-              { label: 'Ad Campaigns', value: stats.ads || 0, icon: '📢', color: '#FBBF24' },
-              { label: 'Active Ad Campaigns', value: stats.ads || 0, icon: '🎯', color: '#38BDF8' },
+              { label: 'Users', value: stats.users || 0, icon: '👥' },
+              { label: 'Listings', value: stats.listings || 0, icon: '📦' },
+              { label: 'Orders', value: stats.orders || 0, icon: '🧾' },
+              { label: 'Reports', value: stats.reports || 0, icon: '🚩' },
+              { label: 'Ads', value: stats.ads || 0, icon: '📢' },
+              { label: 'Status', value: 'OK', icon: '✅' },
             ].map(a => (
-              <div key={a.label} className="card p-5 text-center">
-                <span className="text-3xl">{a.icon}</span>
-                <p className="text-3xl font-bold mt-2" style={{ color: a.color }}>{a.value}</p>
-                <p className="text-sm text-[#55556A] mt-1">{a.label}</p>
+              <div key={a.label} className="card p-4 text-center">
+                <span className="text-2xl">{a.icon}</span>
+                <p className="text-2xl font-bold text-[#050505] mt-2">{a.value}</p>
+                <p className="text-sm text-[#65676B]">{a.label}</p>
               </div>
             ))}
           </div>
         )}
-
-        <div className="card p-5 mt-6">
-          <h2 className="text-lg font-semibold text-[#E8E8ED] mb-4">Platform Health</h2>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div><span className="text-[#55556A]">Status:</span> <span className="text-[#34D399]">Operational</span></div>
-            <div><span className="text-[#55556A]">Uptime:</span> <span className="text-[#E8E8ED]">99.9%</span></div>
-            <div><span className="text-[#55556A]">Database:</span> <span className="text-[#34D399]">Connected</span></div>
-            <div><span className="text-[#55556A]">Built by:</span> <span className="text-[#38BDF8]">Nova Tech</span></div>
+        <div className="card p-4 mt-4">
+          <h2 className="font-bold text-[#050505] mb-3">Platform Health</h2>
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div><span className="text-[#65676B]">Status:</span> <span className="text-[#42B72A] font-medium">Operational</span></div>
+            <div><span className="text-[#65676B]">Database:</span> <span className="text-[#42B72A] font-medium">Connected</span></div>
+            <div><span className="text-[#65676B]">Built by:</span> <span className="font-medium" style={{ color: 'var(--blue)' }}>Nova Tech</span></div>
           </div>
         </div>
       </div>

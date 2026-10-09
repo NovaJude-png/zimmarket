@@ -1,191 +1,167 @@
 'use client';
-
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 
-const CAMPAIGN_TYPES = [
-  { value: 'SPONSORED_LISTING', label: 'Sponsored Listing', desc: 'Promote your listings in search results', icon: '🔍' },
-  { value: 'SPONSORED_SEARCH', label: 'Sponsored Search', desc: 'Appear at top of search results', icon: '🔝' },
-  { value: 'HOMEPAGE_BANNER', label: 'Homepage Banner', desc: 'Featured on the homepage', icon: '🏠' },
-  { value: 'CATEGORY_BANNER', label: 'Category Banner', desc: 'Banner within a category page', icon: '📂' },
-  { value: 'BUSINESS_PROMO', label: 'Business Promotion', desc: 'Promote your business profile', icon: '🏢' },
-  { value: 'FEATURED_STORE', label: 'Featured Store', desc: 'Featured storefront placement', icon: '⭐' },
-  { value: 'LOCATION_BASED', label: 'Location-Based', desc: 'Target specific cities', icon: '📍' },
+const AD_TYPES = [
+  { type: 'LISTING_BOOST', title: 'Listing Boost', desc: 'Promote your listing to the top of search results', icon: '🚀', price: 'From $2/day' },
+  { type: 'BANNER_AD', title: 'Banner Ad', desc: 'Display banner ads on homepage and category pages', icon: '🖼️', price: 'From $5/day' },
+  { type: 'FEATURED_LISTING', title: 'Featured Listing', desc: 'Show your listing in the featured section', icon: '⭐', price: 'From $3/day' },
+  { type: 'SPONSORED_CONTENT', title: 'Sponsored', desc: 'Native ads that blend with listing content', icon: '📢', price: 'From $4/day' },
 ];
 
 export default function CreateAdPage() {
-  const router = useRouter();
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-
+  const [selectedType, setSelectedType] = useState('');
   const [form, setForm] = useState({
-    name: '', campaignType: 'SPONSORED_LISTING',
-    budget: '', dailyBudget: '', startDate: '', endDate: '',
-    targetLocation: '', targetCategory: '',
-    creativeTitle: '', creativeText: '', creativeImage: '', creativeLink: '',
+    name: '', budget: '', dailyBudget: '', startDate: '', endDate: '',
+    targetCities: [] as string[], targetCategories: [] as string[],
+    creativeTitle: '', creativeDescription: '', clickUrl: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    fetch('/api/categories').then(r => r.json()).then(d => setCategories(d.categories || []));
+    fetch('/api/auth/me').then(r => r.json()).then(d => { if (!d.user) window.location.href = '/login'; });
   }, []);
 
-  const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
-
   const handleSubmit = async () => {
-    setError(''); setLoading(true);
-    try {
-      const res = await fetch('/api/ads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, budget: parseFloat(form.budget), dailyBudget: form.dailyBudget ? parseFloat(form.dailyBudget) : null }),
-      });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error); setLoading(false); return; }
-      router.push('/ads/dashboard');
-    } catch { setError('Failed to create campaign'); setLoading(false); }
+    setLoading(true);
+    const res = await fetch('/api/ads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, campaignType: selectedType, budget: parseFloat(form.budget), dailyBudget: parseFloat(form.dailyBudget) }),
+    });
+    if (res.ok) setSuccess(true);
+    setLoading(false);
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="container-app py-16 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'var(--green-light)' }}>
+            <svg className="w-8 h-8 text-[#42B72A]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+          </div>
+          <h1 className="text-2xl font-bold text-[#050505] mb-2">Campaign Created!</h1>
+          <p className="text-[#65676B] mb-6">Your ad campaign has been submitted for review.</p>
+          <button onClick={() => window.location.href = '/ads/dashboard'} className="btn-primary">Go to Dashboard</button>
+        </div>
+      </div>
+    );
+  }
+
+  const cities = ['Harare', 'Bulawayo', 'Mutare', 'Gweru', 'Kwekwe', 'Masvingo'];
 
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="container-app py-6 max-w-2xl">
-        <h1 className="text-2xl font-bold mb-1 text-[#E8E8ED]">Create Ad Campaign</h1>
-        <p className="text-sm text-[#55556A] mb-6">Reach more customers across Zimbabwe</p>
+      <div className="container-app py-4 max-w-2xl">
+        <h1 className="text-xl font-bold text-[#050505] mb-4">Create Ad Campaign</h1>
 
-        {error && <div className="bg-[#F87171]/10 border border-[#F87171]/20 text-[#F87171] px-4 py-3 rounded-xl text-sm mb-4">{error}</div>}
-
-        {/* Steps */}
-        <div className="flex items-center gap-2 mb-8">
+        {/* Progress */}
+        <div className="flex items-center justify-center gap-2 mb-6">
           {[1, 2, 3].map(s => (
-            <div key={s} className="flex items-center flex-1">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                step > s ? 'bg-[#38BDF8] text-[#0A0A0F]' : step === s ? 'bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/40' : 'bg-[#1E1E2A] text-[#55556A]'
-              }`}>{step > s ? '✓' : s}</div>
-              {s < 3 && <div className={`flex-1 h-0.5 mx-2 ${step > s ? 'bg-[#38BDF8]' : 'bg-[#2A2A3A]'}`} />}
+            <div key={s} className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${step >= s ? 'text-white' : 'bg-[#E4E6EB] text-[#65676B]'}`}
+                style={step >= s ? { background: 'var(--blue)' } : {}}>{s}</div>
+              {s < 3 && <div className={`w-12 h-0.5 ${step > s ? '' : 'bg-[#E4E6EB]'}`} style={step > s ? { background: 'var(--blue)' } : {}} />}
             </div>
           ))}
         </div>
 
-        {/* Step 1: Campaign Type */}
-        {step === 1 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#E8E8ED]">Choose Campaign Type</h2>
-            <div className="grid grid-cols-1 gap-3">
-              {CAMPAIGN_TYPES.map(ct => (
-                <button key={ct.value} onClick={() => update('campaignType', ct.value)}
-                  className={`card p-4 text-left flex items-center gap-4 transition-all ${
-                    form.campaignType === ct.value ? 'border-[#38BDF8]/50 bg-[#38BDF8]/5' : 'hover:border-[#2A2A3A]'
-                  }`}>
-                  <span className="text-2xl">{ct.icon}</span>
-                  <div>
-                    <p className="font-medium text-[#E8E8ED]">{ct.label}</p>
-                    <p className="text-xs text-[#55556A]">{ct.desc}</p>
-                  </div>
-                  {form.campaignType === ct.value && <span className="ml-auto text-[#38BDF8]">✓</span>}
-                </button>
-              ))}
+        <div className="card p-4">
+          {step === 1 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-[#050505]">Choose Ad Type</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {AD_TYPES.map(ad => (
+                  <button key={ad.type} onClick={() => setSelectedType(ad.type)}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${selectedType === ad.type ? 'border-current' : 'border-[#E4E6EB] hover:border-[#CED0D4]'}`}
+                    style={selectedType === ad.type ? { borderColor: 'var(--blue)', background: 'var(--blue-light)' } : {}}>
+                    <span className="text-2xl">{ad.icon}</span>
+                    <p className="font-semibold text-[#050505] mt-2">{ad.title}</p>
+                    <p className="text-xs text-[#65676B] mt-1">{ad.desc}</p>
+                    <p className="text-xs font-semibold mt-2" style={{ color: 'var(--blue)' }}>{ad.price}</p>
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setStep(2)} disabled={!selectedType} className="btn-primary w-full disabled:opacity-50">Continue</button>
             </div>
-            <button onClick={() => setStep(2)} className="btn-primary w-full mt-4">Continue</button>
-          </div>
-        )}
+          )}
 
-        {/* Step 2: Creative & Targeting */}
-        {step === 2 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#E8E8ED]">Ad Details</h2>
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-[#8888A0]">Campaign Name *</label>
-              <input value={form.name} onChange={e => update('name', e.target.value)} className="input-field" placeholder="e.g. Summer Sale 2026" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-[#8888A0]">Ad Title *</label>
-              <input value={form.creativeTitle} onChange={e => update('creativeTitle', e.target.value)} className="input-field" placeholder="e.g. Best Deals on Electronics" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-[#8888A0]">Ad Description</label>
-              <textarea value={form.creativeText} onChange={e => update('creativeText', e.target.value)} className="input-field min-h-[80px]" placeholder="Describe your offer..." />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium text-[#8888A0]">Destination Link *</label>
-              <input value={form.creativeLink} onChange={e => update('creativeLink', e.target.value)} className="input-field" placeholder="https://..." />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">Target City</label>
-                <select value={form.targetLocation} onChange={e => update('targetLocation', e.target.value)} className="input-field">
-                  <option value="">All Zimbabwe</option>
-                  {['Harare','Bulawayo','Mutare','Gweru','Kwekwe','Masvingo'].map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">Target Category</label>
-                <select value={form.targetCategory} onChange={e => update('targetCategory', e.target.value)} className="input-field">
-                  <option value="">All Categories</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-4">
-              <button onClick={() => setStep(1)} className="btn-secondary flex-1">Back</button>
-              <button onClick={() => setStep(3)} className="btn-primary flex-1" disabled={!form.name || !form.creativeTitle || !form.creativeLink}>Continue</button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Budget & Schedule */}
-        {step === 3 && (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#E8E8ED]">Budget & Schedule</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">Total Budget (USD) *</label>
-                <input type="number" value={form.budget} onChange={e => update('budget', e.target.value)} className="input-field" placeholder="50.00" min="5" step="0.01" />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">Daily Budget (USD)</label>
-                <input type="number" value={form.dailyBudget} onChange={e => update('dailyBudget', e.target.value)} className="input-field" placeholder="5.00" min="1" step="0.01" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">Start Date *</label>
-                <input type="date" value={form.startDate} onChange={e => update('startDate', e.target.value)} className="input-field" />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-[#8888A0]">End Date *</label>
-                <input type="date" value={form.endDate} onChange={e => update('endDate', e.target.value)} className="input-field" />
-              </div>
-            </div>
-
-            {/* Preview */}
-            <div className="card p-4 border-[#38BDF8]/20">
-              <p className="text-xs text-[#38BDF8] font-medium mb-2">AD PREVIEW</p>
-              <div className="ad-card p-4">
-                <p className="font-semibold text-[#E8E8ED]">{form.creativeTitle || 'Your Ad Title'}</p>
-                <p className="text-sm text-[#8888A0] mt-1">{form.creativeText || 'Your ad description...'}</p>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-xs text-[#55556A]">Sponsored</span>
-                  <span className="text-xs text-[#38BDF8]">Learn More →</span>
+          {step === 2 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-[#050505]">Creative & Targeting</h2>
+              <input className="input-field" placeholder="Campaign name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+              <input className="input-field" placeholder="Ad title" value={form.creativeTitle} onChange={e => setForm({...form, creativeTitle: e.target.value})} />
+              <textarea className="input-field" rows={3} placeholder="Ad description" value={form.creativeDescription} onChange={e => setForm({...form, creativeDescription: e.target.value})} />
+              <input className="input-field" placeholder="Click URL (https://...)" value={form.clickUrl} onChange={e => setForm({...form, clickUrl: e.target.value})} />
+              <div>
+                <label className="block text-sm font-semibold text-[#050505] mb-2">Target Cities</label>
+                <div className="flex flex-wrap gap-2">
+                  {cities.map(city => (
+                    <button key={city} onClick={() => setForm({...form, targetCities: form.targetCities.includes(city) ? form.targetCities.filter(c => c !== city) : [...form.targetCities, city]})}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${form.targetCities.includes(city) ? 'text-white' : 'bg-[#E4E6EB] text-[#050505]'}`}
+                      style={form.targetCities.includes(city) ? { background: 'var(--blue)' } : {}}>{city}</button>
+                  ))}
                 </div>
               </div>
+              <div className="flex gap-3">
+                <button onClick={() => setStep(1)} className="btn-secondary flex-1">Back</button>
+                <button onClick={() => setStep(3)} className="btn-primary flex-1">Continue</button>
+              </div>
             </div>
+          )}
 
-            <div className="bg-[#38BDF8]/5 border border-[#38BDF8]/20 rounded-xl p-4 text-sm text-[#8888A0]">
-              <p className="font-medium text-[#38BDF8] mb-1">💡 Note</p>
-              <p>Your ad will be reviewed by our team before going live. This usually takes less than 2 hours. Payment is required after approval.</p>
-            </div>
+          {step === 3 && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-[#050505]">Budget & Schedule</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-semibold text-[#050505] mb-1">Total Budget ($)</label>
+                  <input className="input-field" type="number" placeholder="50" value={form.budget} onChange={e => setForm({...form, budget: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#050505] mb-1">Daily Budget ($)</label>
+                  <input className="input-field" type="number" placeholder="5" value={form.dailyBudget} onChange={e => setForm({...form, dailyBudget: e.target.value})} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-semibold text-[#050505] mb-1">Start Date</label>
+                  <input className="input-field" type="date" value={form.startDate} onChange={e => setForm({...form, startDate: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#050505] mb-1">End Date</label>
+                  <input className="input-field" type="date" value={form.endDate} onChange={e => setForm({...form, endDate: e.target.value})} />
+                </div>
+              </div>
 
-            <div className="flex gap-3 mt-4">
-              <button onClick={() => setStep(2)} className="btn-secondary flex-1">Back</button>
-              <button onClick={handleSubmit} className="btn-primary flex-1" disabled={loading || !form.budget || !form.startDate || !form.endDate}>
-                {loading ? 'Creating...' : 'Submit Campaign'}
-              </button>
+              {/* Preview */}
+              <div className="border border-[#E4E6EB] rounded-lg p-4">
+                <p className="text-xs text-[#8A8D91] mb-2">PREVIEW</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--blue-light)' }}>
+                    <svg className="w-4 h-4" style={{ color: 'var(--blue)' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#050505] text-sm">{form.creativeTitle || 'Your Ad Title'}</p>
+                    <p className="text-xs text-[#65676B]">{form.creativeDescription || 'Your ad description'}</p>
+                  </div>
+                  <span className="text-[10px] text-[#8A8D91]">Sponsored</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => setStep(2)} className="btn-secondary flex-1">Back</button>
+                <button onClick={handleSubmit} disabled={loading || !form.budget} className="btn-primary flex-1 disabled:opacity-50">
+                  {loading ? 'Creating...' : 'Create Campaign'}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
