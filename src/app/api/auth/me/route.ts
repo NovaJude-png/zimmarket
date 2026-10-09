@@ -86,7 +86,7 @@ export async function PUT(request: NextRequest) {
     // Profile update
     const { displayName, bio, phone, locationCity } = body;
     if (displayName || bio !== undefined || locationCity) {
-      await prisma.userProfile.upsert({
+      await prisma.profile.upsert({
         where: { userId: session.userId },
         update: {
           ...(displayName && { displayName: displayName.trim() }),

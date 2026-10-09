@@ -73,23 +73,26 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const {
-      name, campaignType, budget, dailyBudget, startDate, endDate,
-      targetLocation, targetCategory, targetAudience,
-      creativeTitle, creativeText, creativeImage, creativeLink,
-    } = body;
+        name, campaignType, budget, dailyBudget, startDate, endDate,
+        targetLocation, targetCategory, targetAudience,
+        creativeTitle, creativeText, creativeDescription, creativeImage, creativeLink, clickUrl,
+      } = body;
+
+      const finalCreativeText = creativeText || creativeDescription;
+      const finalCreativeLink = creativeLink || clickUrl;
 
     // Validation
     if (!name || !campaignType || !budget || !startDate || !endDate) {
       return NextResponse.json({ error: 'Missing required fields: name, campaignType, budget, startDate, endDate' }, { status: 400 });
     }
 
-    if (!creativeTitle || !creativeLink) {
-      return NextResponse.json({ error: 'creativeTitle and creativeLink are required' }, { status: 400 });
+    if (!creativeTitle || !finalCreativeLink) {
+      return NextResponse.json({ error: 'creativeTitle and clickUrl are required' }, { status: 400 });
     }
 
     // Content moderation — check for prohibited content
     const prohibited = ['scam', 'fake', 'counterfeit', 'stolen', 'illegal'];
-    const textToCheck = `${creativeTitle} ${creativeText || ''}`.toLowerCase();
+    const textToCheck = `${creativeTitle} ${finalCreativeText || ''}`.toLowerCase();
     const hasProhibited = prohibited.some(word => textToCheck.includes(word));
 
     if (hasProhibited) {
@@ -113,9 +116,9 @@ export async function POST(request: NextRequest) {
         targetCategory: targetCategory || null,
         targetAudience: targetAudience ? JSON.stringify(targetAudience) : null,
         creativeTitle,
-        creativeText: creativeText || null,
+        creativeText: finalCreativeText || null,
         creativeImage: creativeImage || null,
-        creativeLink,
+        creativeLink: finalCreativeLink,
         status: 'PENDING_REVIEW',
         ads: {
           create: getPlacements(campaignType).map(placement => ({

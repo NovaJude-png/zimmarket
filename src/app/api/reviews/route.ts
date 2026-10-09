@@ -45,18 +45,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for duplicate review
-    const existing = await prisma.review.findUnique({
+    const existing = await prisma.review.findFirst({
       where: {
-        authorId_targetId_listingId: {
-          authorId: session.userId,
-          targetId,
-          listingId: listingId || null,
-        },
+        authorId: session.userId,
+        targetId,
+        listingId: listingId || null,
       },
     });
 
     if (existing) {
-      return NextResponse.json({ error: 'You have already reviewed this seller for this listing' }, { status: 409 });
+      return NextResponse.json({ error: 'You have already reviewed this seller' }, { status: 409 });
     }
 
     const review = await prisma.review.create({
